@@ -1,5 +1,6 @@
 package com.lothrazar.autorun.setup;
 
+import org.lwjgl.glfw.GLFW;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +17,7 @@ public class ClientProxy implements IProxy {
   }
 
   private void registerKeys() {
-    key = new KeyBinding("key.run", 88, "");
+    key = new KeyBinding("key.run", GLFW.GLFW_KEY_P, "key.categories.movement");
     ClientRegistry.registerKeyBinding(key);
   }
 
