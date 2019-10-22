@@ -5,12 +5,12 @@ import com.lothrazar.autorun.setup.IProxy;
 import com.lothrazar.autorun.setup.ServerProxy;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -47,46 +47,65 @@ public class ExampleMod {
   public void onTick(PlayerTickEvent event) {
     PlayerEntity p = event.player;
     if (p.getPersistentData().getBoolean(NBT)) {
-      this.move(p);
+      p.setSprinting(false);
+      p.moveForward = 0.85F;
+      p.travel(new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward));
+      //    this.move(p); 
       //      Minecraft.getInstance().gameSettings.keyBindForward.isPressed()
     }
   }
 
   private void move(PlayerEntity p) {
-    p.moveForward = 1.68F;
-    //p.travel(new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward));
     Vec3d p_213352_1_ = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
     // ok go
     IAttributeInstance gravity = p.getAttribute(LivingEntity.ENTITY_GRAVITY);
     double d0 = gravity.getValue();
     World world = p.world;
-    BlockPos blockpos = new BlockPos(p.posX, p.getBoundingBox().minY - 1.0D, p.posZ);
-    float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
-    float f7 = p.onGround ? f5 * 0.91F : 0.91F;
-    p.moveRelative(func_213335_r(p, f5), p_213352_1_);
-    p.setMotion(func_213362_f(p, p.getMotion()));
-    p.move(MoverType.SELF, p.getMotion());
-    Vec3d vec3d5 = p.getMotion();
-    //    if ((p.collidedHorizontally || p.isJumping) && p.isOnLadder()) {
-    //      vec3d5 = new Vec3d(vec3d5.x, 0.2D, vec3d5.z);
-    //    }
-    double d10 = vec3d5.y;
-    if (p.isPotionActive(Effects.LEVITATION)) {
-      d10 += (0.05D * (p.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1) - vec3d5.y) * 0.2D;
-      p.fallDistance = 0.0F;
+    double d1 = p.posY;
+    boolean flag = p.getMotion().y <= 0.0D;
+    float f = p.isSprinting() ? 0.9F : getWaterSlowDown();
+    float f1 = 0.02F;
+    float f2 = EnchantmentHelper.getDepthStriderModifier(p);
+    if (f2 > 3.0F) {
+      f2 = 3.0F;
     }
-    else if (p.world.isRemote && !p.world.isBlockLoaded(blockpos)) {
-      if (p.posY > 0.0D) {
-        d10 = -0.1D;
+    if (!p.onGround) {
+      f2 *= 0.5F;
+    }
+    if (f2 > 0.0F) {
+      f += (0.54600006F - f) * f2 / 3.0F;
+      f1 += (p.getAIMoveSpeed() - f1) * f2 / 3.0F;
+    }
+    if (p.isPotionActive(Effects.DOLPHINS_GRACE)) {
+      f = 0.96F;
+    }
+    f1 *= (float) p.getAttribute(LivingEntity.SWIM_SPEED).getValue();
+    p.moveRelative(f1, p_213352_1_);
+    p.move(MoverType.SELF, p.getMotion());
+    Vec3d vec3d1 = p.getMotion();
+    if (p.collidedHorizontally && p.isOnLadder()) {
+      vec3d1 = new Vec3d(vec3d1.x, 0.2D, vec3d1.z);
+    }
+    p.setMotion(vec3d1.mul(f, 0.8F, f));
+    if (!p.hasNoGravity() && !p.isSprinting()) {
+      Vec3d vec3d2 = p.getMotion();
+      double d2;
+      if (flag && Math.abs(vec3d2.y - 0.005D) >= 0.003D && Math.abs(vec3d2.y - d0 / 16.0D) < 0.003D) {
+        d2 = -0.003D;
       }
       else {
-        d10 = 0.0D;
+        d2 = vec3d2.y - d0 / 16.0D;
       }
+      p.setMotion(vec3d2.x, d2, vec3d2.z);
     }
-    else if (!p.hasNoGravity()) {
-      d10 -= d0;
+    Vec3d vec3d6 = p.getMotion();
+    if (p.collidedHorizontally && p.isOffsetPositionInLiquid(vec3d6.x, vec3d6.y + 0.6F - p.posY + d1, vec3d6.z)) {
+      p.setMotion(vec3d6.x, 0.3F, vec3d6.z);
     }
-    p.setMotion(vec3d5.x * f7, d10 * 0.98F, vec3d5.z * f7);
+  }
+
+  protected float getWaterSlowDown() {
+    return 0.8F;
   }
 
   private float func_213335_r(PlayerEntity p, float p_213335_1_) {
