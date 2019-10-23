@@ -54,10 +54,6 @@ public class ExampleMod {
     p.moveRelative(func_213335_r(p, f5), p_213352_1_);
   }
 
-  protected float getWaterSlowDown() {
-    return 0.8F;
-  }
-
   /**
    * LivingEntity.class::2091
    * 
@@ -72,16 +68,19 @@ public class ExampleMod {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onKeyInput(InputEvent.KeyInputEvent event) {
-    if (Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown()) {
-      setAutorunState(proxy.getClientPlayer(), false);
-    }
+    PlayerEntity player = proxy.getClientPlayer();
+    boolean isCurrentlyAutorun = player.getPersistentData().getBoolean(NBT);
     if (ClientProxy.key != null && ClientProxy.key.isPressed()) {
-      PlayerEntity player = proxy.getClientPlayer();
-      boolean value = !player.getPersistentData().getBoolean(NBT);
-      setAutorunState(player, value);
+      //toggle it off
+      setAutorunState(player, !isCurrentlyAutorun);
+    }
+    else if (isCurrentlyAutorun) {
+      if (Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
+          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
+          Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
+          Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown()) {
+        setAutorunState(proxy.getClientPlayer(), false);
+      }
     }
   }
 

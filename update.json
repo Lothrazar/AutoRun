@@ -1,0 +1,13 @@
+{
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/auto-sprint",
+  "promos": {
+    "1.14.4-latest": "1.0.3",
+    "1.14.4-recommended": "1.0.3"
+  },
+  "1.14.4": {
+    "1.0.0": "Release ",
+    "1.0.1": "Walking now auto disables it",
+    "1.0.2": "Fixed double high jump bug and jittery movement. ",
+    "1.0.3": "Fixed message spam when it is disabled. Fix metadata for mods list menu and created changelog.   "
+  }
+}
