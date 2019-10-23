@@ -37,6 +37,7 @@ public class ExampleMod {
     proxy.init();
   }
 
+  @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onTick(PlayerTickEvent event) {
     PlayerEntity p = event.player;
@@ -45,6 +46,7 @@ public class ExampleMod {
     }
   }
 
+  @OnlyIn(Dist.CLIENT)
   private void move(PlayerEntity p) {
     p.moveForward = 0.85F;
     Vec3d p_213352_1_ = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
@@ -61,6 +63,7 @@ public class ExampleMod {
    * @param p_213335_1_
    * @return
    */
+  @OnlyIn(Dist.CLIENT)
   private float func_213335_r(PlayerEntity p, float p_213335_1_) {
     return p.onGround ? p.getAIMoveSpeed() * (0.21600002F / (p_213335_1_ * p_213335_1_ * p_213335_1_)) : p.jumpMovementFactor;
   }
