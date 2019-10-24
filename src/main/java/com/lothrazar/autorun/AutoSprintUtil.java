@@ -44,6 +44,9 @@ public class AutoSprintUtil {
   }
 
   public static boolean getAutorunState(PlayerEntity player) {
+    if (player == null || player.getPersistentData() == null) {
+      return false;
+    }
     return player.getPersistentData().getBoolean(NBT);
   }
 }
