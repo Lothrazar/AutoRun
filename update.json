@@ -10,6 +10,6 @@
     "1.0.2": "Fixed double high jump bug and jittery movement. ",
     "1.0.3": "Fixed message spam when it is disabled. Fix metadata for mods list menu and created changelog.   Mod now SHOULD be useable client-only, even if server does not have the mod installed.  "
   	,"1.0.4":"Fixed the occasional crash when exiting the world. "
-  	,"1.0.5":"Feature now works while using a Boat or riding a Living Entity.  "
+  	,"1.0.5":"Feature now works while using a Boat or riding a Living Entity.  Increased autosprint flying speed."
   }
 }
