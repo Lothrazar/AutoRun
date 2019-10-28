@@ -4,6 +4,7 @@ import com.lothrazar.autorun.setup.ClientProxy;
 import com.lothrazar.autorun.setup.IProxy;
 import com.lothrazar.autorun.setup.ServerProxy;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -50,13 +51,22 @@ public class AutoSprintMod {
       AutoSprintUtil.setAutorunState(player, !isCurrentlyAutorun);
     }
     else if (isCurrentlyAutorun) {
-      if (Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
-          Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
-          Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown()) {
+      if (doesKeypressHaltSprint(player)) {
         //auto off
         AutoSprintUtil.setAutorunState(player, false);
       }
     }
+  }
+
+  private boolean doesKeypressHaltSprint(PlayerEntity p) {
+    if (p.getRidingEntity() instanceof BoatEntity) {
+      //boats can still turn left/right 
+      return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
+          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown();
+    }
+    return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown();
   }
 }
