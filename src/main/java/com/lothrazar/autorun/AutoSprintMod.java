@@ -1,39 +1,39 @@
 package com.lothrazar.autorun;
 
 import com.lothrazar.autorun.setup.ClientProxy;
-import com.lothrazar.autorun.setup.IProxy;
-import com.lothrazar.autorun.setup.ServerProxy;
+import com.lothrazar.autorun.setup.CommonProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
+import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("autorun")
+@Mod(modid = "autorun")
 public class AutoSprintMod {
 
-  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  @SidedProxy(clientSide = "com.lothrazar.autorun.setup.ClientProxy", serverSide = "com.lothrazar.autorun.setup.CommonProxy")
+  public static CommonProxy proxy;
 
   public AutoSprintMod() {
     // Register the setup method for modloading
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    //    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     MinecraftForge.EVENT_BUS.register(this);
   }
 
-  private void setup(final FMLCommonSetupEvent event) {
+  @EventHandler
+  public void onInit(FMLInitializationEvent event) {
     proxy.init();
   }
 
-  @OnlyIn(Dist.CLIENT)
+  @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onTick(PlayerTickEvent event) {
     if (AutoSprintUtil.getAutorunState(event.player)) {
@@ -41,10 +41,10 @@ public class AutoSprintMod {
     }
   }
 
-  @OnlyIn(Dist.CLIENT)
+  @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onKeyInput(InputEvent.KeyInputEvent event) {
-    PlayerEntity player = proxy.getClientPlayer();
+    EntityPlayer player = proxy.getClientPlayer();
     boolean isCurrentlyAutorun = AutoSprintUtil.getAutorunState(player);
     if (ClientProxy.key != null && ClientProxy.key.isPressed()) {
       //toggle it to inverse
@@ -58,15 +58,15 @@ public class AutoSprintMod {
     }
   }
 
-  private boolean doesKeypressHaltSprint(PlayerEntity p) {
-    if (p.getRidingEntity() instanceof BoatEntity) {
+  private boolean doesKeypressHaltSprint(EntityPlayer p) {
+    if (p.getRidingEntity() instanceof EntityBoat) {
       //boats can still turn left/right 
-      return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown();
+      return Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown() ||
+          Minecraft.getMinecraft().gameSettings.keyBindBack.isKeyDown();
     }
-    return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown();
+    return Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown() ||
+        Minecraft.getMinecraft().gameSettings.keyBindBack.isKeyDown() ||
+        Minecraft.getMinecraft().gameSettings.keyBindLeft.isKeyDown() ||
+        Minecraft.getMinecraft().gameSettings.keyBindRight.isKeyDown();
   }
 }

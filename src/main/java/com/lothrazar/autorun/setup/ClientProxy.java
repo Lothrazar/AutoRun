@@ -1,13 +1,13 @@
 package com.lothrazar.autorun.setup;
 
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public class ClientProxy implements IProxy {
+public class ClientProxy extends CommonProxy {
 
   public static KeyBinding key;
 
@@ -17,17 +17,17 @@ public class ClientProxy implements IProxy {
   }
 
   private void registerKeys() {
-    key = new KeyBinding("key.run", GLFW.GLFW_KEY_P, "key.categories.movement");
+    key = new KeyBinding("key.run", Keyboard.KEY_P, "key.categories.movement");
     ClientRegistry.registerKeyBinding(key);
   }
 
   @Override
   public World getClientWorld() {
-    return Minecraft.getInstance().world;
+    return Minecraft.getMinecraft().world;
   }
 
   @Override
-  public PlayerEntity getClientPlayer() {
-    return Minecraft.getInstance().player;
+  public EntityPlayer getClientPlayer() {
+    return Minecraft.getMinecraft().player;
   }
 }
