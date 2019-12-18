@@ -13,6 +13,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AutoSprintUtil {
 
+  /**
+   * Mappings incomplete:
+   * 
+   * func_226277_ct_ == getPosX() func_226281_cx_ == getPosZ()
+   * 
+   * 
+   */
   private static final String NBT = "isautorunning";
 
   /**
@@ -49,7 +56,7 @@ public class AutoSprintUtil {
 
   private static void actuallyMove(BoatEntity p, Vec3d vec) {
     World world = p.world;
-    BlockPos blockpos = new BlockPos(p.posX, p.getBoundingBox().minY - 1.0D, p.posZ);
+    BlockPos blockpos = new BlockPos(p.func_226277_ct_(), p.getBoundingBox().minY - 1.0D, p.func_226281_cx_());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
   }
@@ -60,7 +67,7 @@ public class AutoSprintUtil {
 
   private static void actuallyMove(LivingEntity p, Vec3d vec) {
     World world = p.world;
-    BlockPos blockpos = new BlockPos(p.posX, p.getBoundingBox().minY - 1.0D, p.posZ);
+    BlockPos blockpos = new BlockPos(p.func_226277_ct_(), p.getBoundingBox().minY - 1.0D, p.func_226281_cx_());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
   }

@@ -26,7 +26,7 @@ logoFile="autorun.png" #optional
 # A text field displayed in the mod UI
 credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
-authors="Love, Cheese and small house plants" #optional
+authors="Lothrazar" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 This adds a new keyboard shortcut (in controls menu) that toggles sprinting on and off.
@@ -41,7 +41,7 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[28,)" #mandatory
+    versionRange="[30,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -50,6 +50,6 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
 [[dependencies.autorun]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.4]"
+    versionRange="[1.15.1]"
     ordering="NONE"
     side="BOTH"
