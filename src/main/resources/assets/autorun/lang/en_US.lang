@@ -1,0 +1,4 @@
+key.run=Auto-run toggle
+autorun.true=Auto-run enabled via keybinding
+autorun.false=Auto-run disabled
+

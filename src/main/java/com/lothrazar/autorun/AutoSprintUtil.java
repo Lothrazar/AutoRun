@@ -1,13 +1,17 @@
 package com.lothrazar.autorun;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@OnlyIn(Dist.CLIENT)
+@SideOnly(Side.CLIENT)
 public class AutoSprintUtil {
 
   private static final String NBT = "isautorunning";
@@ -18,26 +22,29 @@ public class AutoSprintUtil {
    * @param p
    */
   public static void move(EntityPlayer p) {
-    if (p.isPassenger() && p.getRidingEntity() instanceof EntityLivingBase) {
-      //
+    
+    if (p.isRiding() && p.getRidingEntity() instanceof EntityLivingBase) {
+      //so ride mount
       EntityLivingBase ridin = (EntityLivingBase) p.getRidingEntity();
       p.moveForward = 0.45F;
       Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
     else if (p.getRidingEntity() instanceof EntityBoat) {
-      //
+      //sailing
       EntityBoat ridin = (EntityBoat) p.getRidingEntity();
       p.moveForward = 0.915F;
       Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
     else if (p.onGround == false && p.isCreative()) {
+      //creative flight
       p.moveForward = 0.995F;
       Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(p, vec);
     }
     else {
+      //default speed walking
       p.moveForward = 0.85F;
       Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(p, vec);
@@ -45,10 +52,16 @@ public class AutoSprintUtil {
   }
 
   private static void actuallyMove(EntityBoat p, Vec3d vec) {
-    World world = p.world;
-    BlockPos blockpos = new BlockPos(p.posX, p.getBoundingBox().minY - 1.0D, p.posZ);
-    float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
-    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+    World world = p.world; 
+    BlockPos pos = new BlockPos(p.posX, p.getEntityBoundingBox().minY - 1.0D, p.posZ);
+ 
+    IBlockState state = p.world.getBlockState(pos);
+    float f5 = state.getBlock().getSlipperiness(state,world, pos, p);
+//    p.move(type, x, y, z);
+//    p.moveRelative(strafe, up, forward, friction);
+//    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+    p.motionX *= f5;
+    p.motionZ *= f5;
   }
 
   public static float func_213335_r(EntityBoat p, float flt) {
@@ -56,10 +69,22 @@ public class AutoSprintUtil {
   }
 
   private static void actuallyMove(EntityLivingBase p, Vec3d vec) {
-    World world = p.world;
-    BlockPos blockpos = new BlockPos(p.posX, p.getBoundingBox().minY - 1.0D, p.posZ);
-    float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
-    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+//    World world = p.world;
+
+    p.moveStrafing *= 0.98F;
+    p.moveForward *= 0.98F;
+    p.randomYawVelocity *= 0.9F;
+//    this.updateElytra();
+    p.travel(p.moveStrafing, p.moveVertical, p.moveForward);
+    //    p.moveRelative(strafe, up, forward, friction);
+//    
+//    BlockPos pos = new BlockPos(p.posX, p.getRenderBoundingBox().minY - 1.0D, p.posZ);
+//
+//    IBlockState state = p.world.getBlockState(pos);
+//    float f5 = state.getBlock().getSlipperiness(state,world, pos, p);
+////    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+//    p.motionX *= f5;
+//    p.motionZ *= f5;
   }
 
   /**
@@ -80,14 +105,14 @@ public class AutoSprintUtil {
   }
 
   public static void setAutorunState(EntityPlayer player, boolean value) {
-    player.getPersistentData().putBoolean(NBT, value);
-    player.sendStatusMessage(new TranslationTextComponent("autorun." + value), true);
+    player.getEntityData().setBoolean(NBT, value);
+    player.sendStatusMessage(new TextComponentTranslation("autorun." + value), true);
   }
 
   public static boolean getAutorunState(EntityPlayer player) {
-    if (player == null || player.getPersistentData() == null) {
+    if (player == null || player.getEntityData() == null) {
       return false;
     }
-    return player.getPersistentData().getBoolean(NBT);
+    return player.getEntityData().getBoolean(NBT);
   }
 }
