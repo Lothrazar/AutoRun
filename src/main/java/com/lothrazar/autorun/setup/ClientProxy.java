@@ -17,7 +17,7 @@ public class ClientProxy extends CommonProxy {
   }
 
   private void registerKeys() {
-    key = new KeyBinding("key.run", Keyboard.KEY_P, "key.categories.movement");
+    key = new KeyBinding("key.autorun", Keyboard.KEY_P, "key.categories.movement");
     ClientRegistry.registerKeyBinding(key);
   }
 

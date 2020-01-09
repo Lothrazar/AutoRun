@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "autorun",
+    "name": "Auto Run sprinting",
+    "description": "This adds a new keyboard shortcut (in controls menu) that toggles sprinting on and off. ",
+    "version": "1.0.0",
+    "mcversion": "1.12.2",
+    "url": "https://www.curseforge.com/minecraft/mc-mods/auto-sprint/files",
+    "updateUrl": "https://www.curseforge.com/minecraft/mc-mods/auto-sprint/files",
+    "authorList": [ "Lothrazar" ],
+    "credits": "Everyone who contributes to Minecraft, Minecraft Forge, and related projects",
+    "logoFile": "",
+    "screenshots": [  ],
+    "parent": "",
+    "requiredMods": [ "Forge" ],
+    "dependencies": [  ],
+    "dependants": [  ],
+    "useDependencyInformation": false
+  }]
+}

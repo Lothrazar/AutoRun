@@ -100,7 +100,7 @@ public class AutoSprintUtil {
 
   public static void setAutorunState(EntityPlayer player, boolean value) {
     player.getEntityData().setBoolean(NBT, value);
-    String s = value ? "Auto-run enabled via keybinding" : "Auto-run disabled";//I18n.translateToLocal("autorun." + value);
+    String s = value ? "Auto-run enabled via keybinding" : "Auto-run disabled";//I18n.translateToLocal("autorun.saved." + value);
     player.sendStatusMessage(new TextComponentTranslation(s), true);
   }
 

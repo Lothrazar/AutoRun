@@ -1,5 +1,5 @@
 
-key.run=Auto-run toggle
-autorun.true=Auto-run enabled via keybinding
-autorun.false=Auto-run disabled
+key.autorun=Auto-run toggle
+autorun.saved.true=Auto-run enabled via keybinding
+autorun.saved.false=Auto-run disabled
 
