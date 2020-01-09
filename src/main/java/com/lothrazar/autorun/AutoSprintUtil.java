@@ -22,7 +22,6 @@ public class AutoSprintUtil {
    * @param p
    */
   public static void move(EntityPlayer p) {
-    
     if (p.isRiding() && p.getRidingEntity() instanceof EntityLivingBase) {
       //so ride mount
       EntityLivingBase ridin = (EntityLivingBase) p.getRidingEntity();
@@ -52,14 +51,13 @@ public class AutoSprintUtil {
   }
 
   private static void actuallyMove(EntityBoat p, Vec3d vec) {
-    World world = p.world; 
+    World world = p.world;
     BlockPos pos = new BlockPos(p.posX, p.getEntityBoundingBox().minY - 1.0D, p.posZ);
- 
     IBlockState state = p.world.getBlockState(pos);
-    float f5 = state.getBlock().getSlipperiness(state,world, pos, p);
-//    p.move(type, x, y, z);
-//    p.moveRelative(strafe, up, forward, friction);
-//    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+    float f5 = state.getBlock().getSlipperiness(state, world, pos, p);
+    //    p.move(type, x, y, z);
+    //    p.moveRelative(strafe, up, forward, friction);
+    //    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
     p.motionX *= f5;
     p.motionZ *= f5;
   }
@@ -69,22 +67,18 @@ public class AutoSprintUtil {
   }
 
   private static void actuallyMove(EntityLivingBase p, Vec3d vec) {
-//    World world = p.world;
-
-    p.moveStrafing *= 0.98F;
-    p.moveForward *= 0.98F;
+    World world = p.world;
+    BlockPos pos = new BlockPos(p.posX, p.getRenderBoundingBox().minY - 1.0D, p.posZ);
+    IBlockState state = p.world.getBlockState(pos);
+    float f5 = state.getBlock().getSlipperiness(state, world, pos, p);
+    p.moveStrafing = 0;//*= 0.98F;
+    p.moveForward *= AutoSprintUtil.func_213335_r(p, f5 / 2);//0.98F;
     p.randomYawVelocity *= 0.9F;
-//    this.updateElytra();
+    p.setSprinting(true);
+    
+ 
     p.travel(p.moveStrafing, p.moveVertical, p.moveForward);
-    //    p.moveRelative(strafe, up, forward, friction);
-//    
-//    BlockPos pos = new BlockPos(p.posX, p.getRenderBoundingBox().minY - 1.0D, p.posZ);
-//
-//    IBlockState state = p.world.getBlockState(pos);
-//    float f5 = state.getBlock().getSlipperiness(state,world, pos, p);
-////    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
-//    p.motionX *= f5;
-//    p.motionZ *= f5;
+ 
   }
 
   /**
@@ -106,7 +100,8 @@ public class AutoSprintUtil {
 
   public static void setAutorunState(EntityPlayer player, boolean value) {
     player.getEntityData().setBoolean(NBT, value);
-    player.sendStatusMessage(new TextComponentTranslation("autorun." + value), true);
+    String s = value ? "Auto-run enabled via keybinding" : "Auto-run disabled";//I18n.translateToLocal("autorun." + value);
+    player.sendStatusMessage(new TextComponentTranslation(s), true);
   }
 
   public static boolean getAutorunState(EntityPlayer player) {
