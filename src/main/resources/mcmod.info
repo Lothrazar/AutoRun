@@ -1,0 +1,26 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "autorun",
+    "name": "Auto Sprint",
+    "description": "This adds a new keyboard shortcut (in controls menu) that toggles sprinting on and off.
+
+Tap it once and you are sprinting, and again to turn off
+
+No FOV change is applied during auto sprint, as opposed to regular sprint.",
+
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+    "url": "http://minecraft.curseforge.com/projects/auto-sprint",
+    "updateUrl": "http://minecraft.curseforge.com/projects/auto-sprint",
+    "authorList": [ "Lothrazar" ],
+    "credits": "Everyone who contributes to Minecraft, Minecraft Forge, and related projects",
+    "logoFile": "",
+    "screenshots": [  ],
+    "parent": "",
+    "requiredMods": [ "Forge" ],
+    "dependencies": [  ],
+    "dependants": [  ],
+    "useDependencyInformation": false
+  }]
+}
