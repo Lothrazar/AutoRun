@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,29 +32,30 @@ public class AutoSprintUtil {
       //
       LivingEntity ridin = (LivingEntity) p.getRidingEntity();
       p.moveForward = 0.45F;
-      Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
     else if (p.getRidingEntity() instanceof BoatEntity) {
       //
       BoatEntity ridin = (BoatEntity) p.getRidingEntity();
       p.moveForward = 0.915F;
-      Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
-    else if (p.onGround == false && p.isCreative()) {
-      p.moveForward = 0.995F;
-      Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
-      actuallyMove(p, vec);
-    }
+    else if (p.func_233570_aj_()// onGround
+        == false && p.isCreative()) {
+          p.moveForward = 0.995F;
+          Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+          actuallyMove(p, vec);
+        }
     else {
       p.moveForward = 0.85F;
-      Vec3d vec = new Vec3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(p, vec);
     }
   }
 
-  private static void actuallyMove(BoatEntity p, Vec3d vec) {
+  private static void actuallyMove(BoatEntity p, Vector3d vec) {
     World world = p.world;
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
@@ -65,7 +66,7 @@ public class AutoSprintUtil {
     return (0.0113F) * (0.21600002F / (flt * flt * flt));
   }
 
-  private static void actuallyMove(LivingEntity p, Vec3d vec) {
+  private static void actuallyMove(LivingEntity p, Vector3d vec) {
     World world = p.world;
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
@@ -86,7 +87,9 @@ public class AutoSprintUtil {
         return p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt));
       }
     }
-    return p.onGround ? p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt)) : p.jumpMovementFactor;
+    return p.func_233570_aj_()// onGround
+        ? p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt))
+        : p.jumpMovementFactor;
   }
 
   public static void setAutorunState(PlayerEntity player, boolean value) {

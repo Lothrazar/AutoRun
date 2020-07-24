@@ -18,7 +18,7 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Auto-Sprint" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://raw.githubusercontent.com/Lothrazar/AutoRun/master/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/Lothrazar/AutoRun/trunk/1.16/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/auto-sprint" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
@@ -41,7 +41,7 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[31.1,)" #mandatory
+    versionRange="[32,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -50,6 +50,6 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
 [[dependencies.autorun]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
