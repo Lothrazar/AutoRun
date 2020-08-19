@@ -42,12 +42,11 @@ public class AutoSprintUtil {
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
-    else if (p.func_233570_aj_()// onGround
-        == false && p.isCreative()) {
-          p.moveForward = 0.995F;
-          Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
-          actuallyMove(p, vec);
-        }
+    else if (p.isOnGround() == false && p.isCreative()) {
+      p.moveForward = 0.995F;
+      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      actuallyMove(p, vec);
+    }
     else {
       p.moveForward = 0.85F;
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
@@ -87,7 +86,7 @@ public class AutoSprintUtil {
         return p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt));
       }
     }
-    return p.func_233570_aj_()// onGround
+    return p.isOnGround()// onGround
         ? p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt))
         : p.jumpMovementFactor;
   }
