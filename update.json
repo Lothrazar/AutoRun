@@ -1,10 +1,10 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/auto-sprint",
   "promos": {
-    "1.16.2-latest": "1.0.5",
-    "1.16.2-recommended": "1.0.5"
+    "1.16.3-latest": "1.0.5",
+    "1.16.3-recommended": "1.0.5"
   },
-  "1.16.2": {
-    "1.0.0": "ported "
+  "1.16.3": {
+    "1.0.5": "Ported to 1.16.3"
    }
 }
