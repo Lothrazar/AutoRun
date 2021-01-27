@@ -66,6 +66,9 @@ public class AutoSprintUtil {
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactor(p, f5), vec);
+    if (p.getRidingEntity() == null && p instanceof PlayerEntity) {
+      //HUNGER
+    }
   }
 
   /**
@@ -96,6 +99,7 @@ public class AutoSprintUtil {
   public static void setAutorunState(PlayerEntity player, boolean value) {
     player.getPersistentData().putBoolean(NBT, value);
     player.sendStatusMessage(new TranslationTextComponent("autorun." + value), true);
+    player.setSprinting(value);
   }
 
   public static boolean getAutorunState(PlayerEntity player) {

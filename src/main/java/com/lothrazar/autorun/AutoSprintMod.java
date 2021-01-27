@@ -59,12 +59,18 @@ public class AutoSprintMod {
     PlayerEntity player = Minecraft.getInstance().player;
     boolean isCurrentlyAutorun = AutoSprintUtil.getAutorunState(player);
     if (ClientProxy.key != null && ClientProxy.key.isPressed()) {
-      //toggle it to inverse
+      //wait, are we allowed to?
+      if (!isCurrentlyAutorun && player.isElytraFlying()) {
+        if (ConfigRegistry.ALLOW_ELYTRA.get() == false) {
+          return;
+        }
+      }
+      // toggle it to inverse
       AutoSprintUtil.setAutorunState(player, !isCurrentlyAutorun);
     }
     else if (isCurrentlyAutorun) {
       if (doesKeypressHaltSprint(player)) {
-        //auto off
+        // auto off
         AutoSprintUtil.setAutorunState(player, false);
       }
     }
@@ -72,7 +78,7 @@ public class AutoSprintMod {
 
   private boolean doesKeypressHaltSprint(PlayerEntity p) {
     if (p.getRidingEntity() instanceof BoatEntity) {
-      //boats can still turn left/right 
+      // boats can still turn left/right 
       return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
           Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown();
     }
