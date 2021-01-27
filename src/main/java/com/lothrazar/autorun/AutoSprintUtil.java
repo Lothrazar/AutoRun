@@ -1,6 +1,7 @@
 package com.lothrazar.autorun;
 
 import com.lothrazar.autorun.setup.ConfigRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,20 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AutoSprintUtil {
 
-  /**
-   * Mappings incomplete:
-   * 
-   * func_226277_ct_ == getPosX() func_226281_cx_ == getPosZ()
-   * 
-   * 
-   */
   private static final String NBT = "isautorunning";
 
-  /**
-   * Do the auto sprint thing
-   * 
-   * @param p
-   */
   public static void move(PlayerEntity p) {
     if (p.isPassenger() && p.getRidingEntity() instanceof LivingEntity) {
       LivingEntity ridin = (LivingEntity) p.getRidingEntity();
@@ -66,18 +55,8 @@ public class AutoSprintUtil {
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactor(p, f5), vec);
-    if (p.getRidingEntity() == null && p instanceof PlayerEntity) {
-      //HUNGER
-    }
   }
 
-  /**
-   * LivingEntity.class::2091
-   * 
-   * @param p
-   * @param flt
-   * @return
-   */
   public static float getRelevantMoveFactor(LivingEntity p, float flt) {
     if (p instanceof PlayerEntity) {
       PlayerEntity pl = (PlayerEntity) p;
@@ -92,7 +71,7 @@ public class AutoSprintUtil {
 
   public static float getRelevantMoveFactorBoat(BoatEntity p, float flt) {
     // boat has no getAIMoveSpeed(), so we hardcode it
-    float aiMoveSpeedMock = 0.0383F;
+    final float aiMoveSpeedMock = 0.0383F;
     return aiMoveSpeedMock * (0.21600002F / (flt * flt * flt));
   }
 
@@ -107,5 +86,17 @@ public class AutoSprintUtil {
       return false;
     }
     return player.getPersistentData().getBoolean(NBT);
+  }
+
+  public static boolean doesKeypressHaltSprint(PlayerEntity p) {
+    if (p.getRidingEntity() instanceof BoatEntity) {
+      // boats can still turn left/right 
+      return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
+          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown();
+    }
+    return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
+        Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown();
   }
 }
