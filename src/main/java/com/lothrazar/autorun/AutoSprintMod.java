@@ -1,8 +1,7 @@
 package com.lothrazar.autorun;
 
 import com.lothrazar.autorun.setup.ClientProxy;
-import com.lothrazar.autorun.setup.IProxy;
-import com.lothrazar.autorun.setup.ServerProxy;
+import com.lothrazar.autorun.setup.ConfigRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,25 +11,38 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
+import org.apache.commons.lang3.tuple.Pair;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("autorun")
+@Mod(AutoSprintMod.MODID)
 public class AutoSprintMod {
 
-  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  public static final String MODID = "autorun";
 
   public AutoSprintMod() {
     // Register the setup method for modloading
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+    ConfigRegistry.setup(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     MinecraftForge.EVENT_BUS.register(this);
+    //allow client only
+    ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-    proxy.init();
+    //unused 
+  }
+
+  private void setupClient(final FMLClientSetupEvent event) {
+    ClientProxy.registerKeys();
   }
 
   @OnlyIn(Dist.CLIENT)
@@ -44,7 +56,7 @@ public class AutoSprintMod {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onKeyInput(InputEvent.KeyInputEvent event) {
-    PlayerEntity player = proxy.getClientPlayer();
+    PlayerEntity player = Minecraft.getInstance().player;
     boolean isCurrentlyAutorun = AutoSprintUtil.getAutorunState(player);
     if (ClientProxy.key != null && ClientProxy.key.isPressed()) {
       //toggle it to inverse

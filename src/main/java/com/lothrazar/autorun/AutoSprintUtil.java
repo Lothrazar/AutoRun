@@ -1,5 +1,6 @@
 package com.lothrazar.autorun;
 
+import com.lothrazar.autorun.setup.ConfigRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,26 +30,25 @@ public class AutoSprintUtil {
    */
   public static void move(PlayerEntity p) {
     if (p.isPassenger() && p.getRidingEntity() instanceof LivingEntity) {
-      //
       LivingEntity ridin = (LivingEntity) p.getRidingEntity();
-      p.moveForward = 0.45F;
+      p.moveForward = ConfigRegistry.SPD_MOUNTED.get().floatValue();
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
     else if (p.getRidingEntity() instanceof BoatEntity) {
-      //
+      // 
       BoatEntity ridin = (BoatEntity) p.getRidingEntity();
-      p.moveForward = 0.915F;
+      p.moveForward = ConfigRegistry.SPD_BOATING.get().floatValue();
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(ridin, vec);
     }
     else if (p.isOnGround() == false && p.isCreative()) {
-      p.moveForward = 0.995F;
+      p.moveForward = ConfigRegistry.SPD_CREATIVE.get().floatValue();
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(p, vec);
     }
     else {
-      p.moveForward = 0.85F;
+      p.moveForward = ConfigRegistry.SPD_WALKING.get().floatValue();
       Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
       actuallyMove(p, vec);
     }
@@ -58,18 +58,14 @@ public class AutoSprintUtil {
     World world = p.world;
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
-    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
-  }
-
-  public static float func_213335_r(BoatEntity p, float flt) {
-    return (0.0113F) * (0.21600002F / (flt * flt * flt));
+    p.moveRelative(AutoSprintUtil.getRelevantMoveFactorBoat(p, f5), vec);
   }
 
   private static void actuallyMove(LivingEntity p, Vector3d vec) {
     World world = p.world;
     BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
     float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
-    p.moveRelative(AutoSprintUtil.func_213335_r(p, f5), vec);
+    p.moveRelative(AutoSprintUtil.getRelevantMoveFactor(p, f5), vec);
   }
 
   /**
@@ -79,7 +75,7 @@ public class AutoSprintUtil {
    * @param flt
    * @return
    */
-  public static float func_213335_r(LivingEntity p, float flt) {
+  public static float getRelevantMoveFactor(LivingEntity p, float flt) {
     if (p instanceof PlayerEntity) {
       PlayerEntity pl = (PlayerEntity) p;
       if (pl.isCreative()) {
@@ -89,6 +85,10 @@ public class AutoSprintUtil {
     return p.isOnGround()// onGround
         ? p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt))
         : p.jumpMovementFactor;
+  }
+
+  public static float getRelevantMoveFactorBoat(BoatEntity p, float flt) {
+    return (0.0113F) * (0.21600002F / (flt * flt * flt));
   }
 
   public static void setAutorunState(PlayerEntity player, boolean value) {

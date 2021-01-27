@@ -6,5 +6,6 @@
   },
   "1.16.3": {
     "1.0.5": "Ported to 1.16.3"
+    ,"1.1.0":"New config file added to control speeds in 4 situations.  Change default keybind from P to H, since P is the new social interactions page (does not affect existing installs, only new installs).  "
    }
 }
