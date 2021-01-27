@@ -34,7 +34,7 @@ public class ConfigRegistry {
             0.0010000000000F, 1F);
     SPD_BOATING = CFG.comment("Boating speed (any entity that extends BoatEntity) ")
         .defineInRange("boatingSpeed",
-            0.89F,
+            0.5F,
             0.0010000000000F, 1F);
     SPD_CREATIVE = CFG.comment("Creative flight speed")
         .defineInRange("flightSpeed",

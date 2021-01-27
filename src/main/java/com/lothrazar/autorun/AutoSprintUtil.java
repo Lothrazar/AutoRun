@@ -88,7 +88,9 @@ public class AutoSprintUtil {
   }
 
   public static float getRelevantMoveFactorBoat(BoatEntity p, float flt) {
-    return (0.0113F) * (0.21600002F / (flt * flt * flt));
+    // boat has no getAIMoveSpeed(), so we hardcode it
+    float aiMoveSpeedMock = 0.0383F;
+    return aiMoveSpeedMock * (0.21600002F / (flt * flt * flt));
   }
 
   public static void setAutorunState(PlayerEntity player, boolean value) {
