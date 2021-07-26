@@ -3,7 +3,7 @@ package com.lothrazar.autorun;
 import com.lothrazar.autorun.setup.ClientProxy;
 import com.lothrazar.autorun.setup.ConfigRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -23,11 +23,11 @@ public class AutoSprintEvents {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onKeyInput(InputEvent.KeyInputEvent event) {
-    PlayerEntity player = Minecraft.getInstance().player;
+    Player player = Minecraft.getInstance().player;
     boolean isCurrentlyAutorun = AutoSprintUtil.getAutorunState(player);
-    if (ClientProxy.key != null && ClientProxy.key.isPressed()) {
+    if (ClientProxy.key != null && ClientProxy.key.consumeClick()) {
       //wait, are we allowed to?
-      if (!isCurrentlyAutorun && player.isElytraFlying()) {
+      if (!isCurrentlyAutorun && player.isFallFlying()) {
         if (ConfigRegistry.ALLOW_ELYTRA.get() == false) {
           return;
         }

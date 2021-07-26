@@ -2,13 +2,13 @@ package com.lothrazar.autorun;
 
 import com.lothrazar.autorun.setup.ConfigRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,86 +17,86 @@ public class AutoSprintUtil {
 
   private static final String NBT = "isautorunning";
 
-  public static void move(PlayerEntity p) {
-    if (p.isPassenger() && p.getRidingEntity() instanceof LivingEntity) {
-      LivingEntity ridin = (LivingEntity) p.getRidingEntity();
-      p.moveForward = ConfigRegistry.SPD_MOUNTED.get().floatValue();
-      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+  public static void move(Player p) {
+    if (p.isPassenger() && p.getVehicle() instanceof LivingEntity) {
+      LivingEntity ridin = (LivingEntity) p.getVehicle();
+      p.zza = ConfigRegistry.SPD_MOUNTED.get().floatValue();
+      Vec3 vec = new Vec3(p.xxa, p.yya, p.zza);
       actuallyMove(ridin, vec);
     }
-    else if (p.getRidingEntity() instanceof BoatEntity) {
+    else if (p.getVehicle() instanceof Boat) {
       // 
-      BoatEntity ridin = (BoatEntity) p.getRidingEntity();
-      p.moveForward = ConfigRegistry.SPD_BOATING.get().floatValue();
-      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      Boat ridin = (Boat) p.getVehicle();
+      p.zza = ConfigRegistry.SPD_BOATING.get().floatValue();
+      Vec3 vec = new Vec3(p.xxa, p.yya, p.zza);
       actuallyMove(ridin, vec);
     }
     else if (p.isOnGround() == false && p.isCreative()) {
-      p.moveForward = ConfigRegistry.SPD_CREATIVE.get().floatValue();
-      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      p.zza = ConfigRegistry.SPD_CREATIVE.get().floatValue();
+      Vec3 vec = new Vec3(p.xxa, p.yya, p.zza);
       actuallyMove(p, vec);
     }
     else {
-      p.moveForward = ConfigRegistry.SPD_WALKING.get().floatValue();
-      Vector3d vec = new Vector3d(p.moveStrafing, p.moveVertical, p.moveForward);
+      p.zza = ConfigRegistry.SPD_WALKING.get().floatValue();
+      Vec3 vec = new Vec3(p.xxa, p.yya, p.zza);
       actuallyMove(p, vec);
     }
   }
 
-  private static void actuallyMove(BoatEntity p, Vector3d vec) {
-    World world = p.world;
-    BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
-    float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
+  private static void actuallyMove(Boat p, Vec3 vec) {
+    Level world = p.level;
+    BlockPos blockpos = new BlockPos(p.getX(), p.getBoundingBox().minY - 1.0D, p.getZ());
+    float f5 = p.level.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactorBoat(p, f5), vec);
   }
 
-  private static void actuallyMove(LivingEntity p, Vector3d vec) {
-    World world = p.world;
-    BlockPos blockpos = new BlockPos(p.getPosX(), p.getBoundingBox().minY - 1.0D, p.getPosZ());
-    float f5 = p.world.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
+  private static void actuallyMove(LivingEntity p, Vec3 vec) {
+    Level world = p.level;
+    BlockPos blockpos = new BlockPos(p.getX(), p.getBoundingBox().minY - 1.0D, p.getZ());
+    float f5 = p.level.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactor(p, f5), vec);
   }
 
   public static float getRelevantMoveFactor(LivingEntity p, float flt) {
-    if (p instanceof PlayerEntity) {
-      PlayerEntity pl = (PlayerEntity) p;
+    if (p instanceof Player) {
+      Player pl = (Player) p;
       if (pl.isCreative()) {
-        return p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt));
+        return p.getSpeed() * (0.21600002F / (flt * flt * flt));
       }
     }
     return p.isOnGround()// onGround
-        ? p.getAIMoveSpeed() * (0.21600002F / (flt * flt * flt))
-        : p.jumpMovementFactor;
+        ? p.getSpeed() * (0.21600002F / (flt * flt * flt))
+        : p.flyingSpeed;
   }
 
-  public static float getRelevantMoveFactorBoat(BoatEntity p, float flt) {
+  public static float getRelevantMoveFactorBoat(Boat p, float flt) {
     // boat has no getAIMoveSpeed(), so we hardcode it
     final float aiMoveSpeedMock = 0.0383F;
     return aiMoveSpeedMock * (0.21600002F / (flt * flt * flt));
   }
 
-  public static void setAutorunState(PlayerEntity player, boolean value) {
+  public static void setAutorunState(Player player, boolean value) {
     player.getPersistentData().putBoolean(NBT, value);
-    player.sendStatusMessage(new TranslationTextComponent("autorun." + value), true);
+    player.displayClientMessage(new TranslatableComponent("autorun." + value), true);
     player.setSprinting(value);
   }
 
-  public static boolean getAutorunState(PlayerEntity player) {
+  public static boolean getAutorunState(Player player) {
     if (player == null || player.getPersistentData() == null) {
       return false;
     }
     return player.getPersistentData().getBoolean(NBT);
   }
 
-  public static boolean doesKeypressHaltSprint(PlayerEntity p) {
-    if (p.getRidingEntity() instanceof BoatEntity) {
+  public static boolean doesKeypressHaltSprint(Player p) {
+    if (p.getVehicle() instanceof Boat) {
       // boats can still turn left/right 
-      return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-          Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown();
+      return Minecraft.getInstance().options.keyUp.isDown() ||
+          Minecraft.getInstance().options.keyDown.isDown();
     }
-    return Minecraft.getInstance().gameSettings.keyBindForward.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindBack.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindLeft.isKeyDown() ||
-        Minecraft.getInstance().gameSettings.keyBindRight.isKeyDown();
+    return Minecraft.getInstance().options.keyUp.isDown() ||
+        Minecraft.getInstance().options.keyDown.isDown() ||
+        Minecraft.getInstance().options.keyLeft.isDown() ||
+        Minecraft.getInstance().options.keyRight.isDown();
   }
 }
