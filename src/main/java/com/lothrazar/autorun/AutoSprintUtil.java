@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
@@ -46,14 +47,16 @@ public class AutoSprintUtil {
   private static void actuallyMove(Boat p, Vec3 vec) {
     Level world = p.level;
     BlockPos blockpos = new BlockPos(p.getX(), p.getBoundingBox().minY - 1.0D, p.getZ());
-    float f5 = p.level.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
+    BlockState blockState = p.level.getBlockState(blockpos);
+    float f5 = blockState.getFriction(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactorBoat(p, f5), vec);
   }
 
   private static void actuallyMove(LivingEntity p, Vec3 vec) {
     Level world = p.level;
     BlockPos blockpos = new BlockPos(p.getX(), p.getBoundingBox().minY - 1.0D, p.getZ());
-    float f5 = p.level.getBlockState(blockpos).getSlipperiness(world, blockpos, p);
+    BlockState bs = p.level.getBlockState(blockpos);
+    float f5 = bs.getFriction(world, blockpos, p);
     p.moveRelative(AutoSprintUtil.getRelevantMoveFactor(p, f5), vec);
   }
 

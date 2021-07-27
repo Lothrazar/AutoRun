@@ -1,7 +1,7 @@
 package com.lothrazar.autorun.setup;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientProxy {
