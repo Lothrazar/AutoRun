@@ -22,7 +22,7 @@ version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.autorun' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'autorun'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -30,7 +30,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may 
 	
-	 mappings channel: 'official', version: '1.17.1'
+	 mappings channel: 'official', version: '1.18'
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -68,23 +68,6 @@ minecraft {
             }
         }
 
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'autorun', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                autorun {
-                    source sourceSets.main
-                }
-            }
-        }
     }
 }
 
@@ -161,14 +144,10 @@ task signJar(type: SignJar, dependsOn: jar) {
     outputFile = jar.archivePath
 }
 
-// build.dependsOn signJar
-
 task copyJar(type: Copy) {
     from jar
     into "${dist_folder}"
 }
-
-// build.finalizedBy copyJar
 
 cleanJar {
   delete 'build/libs'

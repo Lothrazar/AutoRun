@@ -1,11 +1,10 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/auto-sprint",
   "promos": {
-    "1.16.4-latest": "1.1.0",
-    "1.16.4-recommended": "1.1.0"
+    "1.18-latest": "1.1.0",
+    "1.18-recommended": "1.1.0"
   },
-  "1.16.4": {
-    "1.0.5": "Ported to 1.16.3"
-    ,"1.1.0":"New config file added to control speeds in 4 situations.  Default Boating speed increased.  A config flag now exists to block auto-sprinting while flying with elytra.  Change default keybind from P to H, since P is the new social interactions page (does not affect existing installs, only new installs).  Mod now sets the player 'isSprinting()' setting, for compatibility with other systems for example draining exhaustion.   "
+  "1.18": {
+    "1.1.0":"Ported"
    }
 }
