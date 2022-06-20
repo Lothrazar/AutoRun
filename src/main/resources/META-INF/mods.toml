@@ -5,9 +5,7 @@
 # Find more information on toml format here:  https://github.com/toml-lang/toml
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
-###############################################################################################
 license="MIT"
-###############################################################################################
 
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[28,)" #mandatory (28 is current forge version)
@@ -22,7 +20,7 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Auto-Sprint" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://raw.githubusercontent.com/Lothrazar/AutoRun/trunk/1.18/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/Lothrazar/AutoRun/trunk/1.19/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/auto-sprint" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
@@ -45,7 +43,7 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[33,)" #mandatory
+    versionRange="[41,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -54,6 +52,6 @@ No FOV change is applied during auto sprint, as opposed to regular sprint.'''
 [[dependencies.autorun]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2,)"
+    versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"

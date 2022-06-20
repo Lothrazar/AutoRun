@@ -1,22 +1,12 @@
-buildscript {
-    repositories {
-	maven { url = 'https://maven.minecraftforge.net' }  
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' 
+
 import net.minecraftforge.gradle.common.tasks.SignJar
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
+
+
 
 version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.autorun' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -30,7 +20,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may 
 	
-	 mappings channel: 'official', version: '1.18'
+	 mappings channel: 'official', version: '1.19'
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -149,6 +139,6 @@ task copyJar(type: Copy) {
     into "${dist_folder}"
 }
 
-cleanJar {
+task cleanJar {
   delete 'build/libs'
 }

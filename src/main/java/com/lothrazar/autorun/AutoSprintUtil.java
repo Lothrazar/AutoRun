@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -80,7 +80,7 @@ public class AutoSprintUtil {
 
   public static void setAutorunState(Player player, boolean value) {
     player.getPersistentData().putBoolean(NBT, value);
-    player.displayClientMessage(new TranslatableComponent("autorun." + value), true);
+    player.displayClientMessage(Component.translatable("autorun." + value), true);
     player.setSprinting(value);
   }
 
