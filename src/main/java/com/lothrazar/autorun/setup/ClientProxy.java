@@ -10,11 +10,11 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientProxy {
 
-  public static final KeyMapping KEY = new KeyMapping("key.run", GLFW.GLFW_KEY_H, "key.categories.movement");
+  public static KeyMapping KEY;
 
   @SubscribeEvent
   public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-    //    net.minecraftforge.client.ClientRegistry.registerKeyBinding(CAKE); 
-    event.register(KEY);
+    //    net.minecraftforge.client.ClientRegistry.registerKeyBinding(CAKE);
+    event.register(KEY = new KeyMapping("key.run", GLFW.GLFW_KEY_H, "key.categories.movement"));
   }
 }

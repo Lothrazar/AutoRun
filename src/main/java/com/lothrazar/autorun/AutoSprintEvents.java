@@ -56,7 +56,7 @@ public class AutoSprintEvents {
       speed = ConfigAutoRun.SPD_BOATING.get().floatValue();
       AutoSprintUtil.moveAlongVector(ridin, AutoSprintUtil.vector(player, speed));
     }
-    else if (player.isOnGround() == false && player.isCreative()) {
+    else if (player.onGround() == false && player.isCreative()) {
       speed = ConfigAutoRun.SPD_CREATIVE.get().floatValue();
       AutoSprintUtil.moveAlongVector(player, AutoSprintUtil.vector(player, speed));
     }
