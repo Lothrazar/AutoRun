@@ -7,11 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public class AutoSprintEvents {
 
@@ -40,9 +40,9 @@ public class AutoSprintEvents {
 
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
-  public void onTick(PlayerTickEvent event) {
-    if (AutoSprintUtil.getAutorunState(event.player)) {
-      move(event.player);
+  public void onTick(PlayerTickEvent.Post event) {
+    if (AutoSprintUtil.getAutorunState(event.getEntity())) {
+      move(event.getEntity());
     }
   }
 
