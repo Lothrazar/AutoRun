@@ -1,21 +1,19 @@
 package com.lothrazar.autorun.setup;
 
 import com.lothrazar.autorun.AutoSprintMod;
-import com.lothrazar.library.config.ConfigTemplate;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.*;
 
-public class ConfigAutoRun extends ConfigTemplate {
+public class ConfigAutoRun {
 
-  private static ForgeConfigSpec CONFIG;
+  public static ModConfigSpec CONFIG;
   public static DoubleValue SPD_WALKING;
   public static DoubleValue SPD_MOUNTED;
   public static DoubleValue SPD_BOATING;
   public static DoubleValue SPD_CREATIVE;
   public static BooleanValue ALLOW_ELYTRA;
   static {
-    final ForgeConfigSpec.Builder BUILDER = builder();
+    final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     final String WALL = "####################################################################################";
     BUILDER.comment(WALL,
         "Mod settings such as speed in different situations", WALL)
@@ -43,7 +41,4 @@ public class ConfigAutoRun extends ConfigTemplate {
     CONFIG = BUILDER.build();
   }
 
-  public ConfigAutoRun() {
-    CONFIG.setConfig(setup(AutoSprintMod.MODID));
-  }
 }
