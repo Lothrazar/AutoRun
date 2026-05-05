@@ -21,6 +21,8 @@ version="${mod_version}" #mandatory
  # A display name for the mod
 
 displayName="${mod_name}" #mandatory
+# Client-side only mod — servers without this mod will still accept clients that have it
+displayTest="IGNORE_ALL_VERSION"
 # A URL to query for updates for this mod. See the JSON update specification <here>
 # updateJSONURL="https://raw.githubusercontent.com/Lothrazar/${mod_id}/trunk/${minecraft_version}/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI # replace with your website
@@ -64,12 +66,5 @@ ${mod_description}
     modId="minecraft"
     type="required" # was mandatory=true
     versionRange="[${minecraft_version},)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
-    modId="flib"
-    type="required"
-    versionRange="[${flib_version},)"
     ordering="NONE"
     side="BOTH"

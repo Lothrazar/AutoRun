@@ -2,7 +2,6 @@ package com.lothrazar.autorun;
 
 import com.lothrazar.autorun.setup.ClientProxy;
 import com.lothrazar.autorun.setup.ConfigAutoRun;
-import com.lothrazar.library.util.AutoSprintUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +18,7 @@ public class AutoSprintEvents {
   @SubscribeEvent
   public void onKeyInputEventGeneric(InputEvent.Key event) {
     Player player = Minecraft.getInstance().player;
-    boolean isCurrentlyAutorun = AutoSprintUtil.getAutorunState(player);
+    boolean isCurrentlyAutorun = AutoSprintUtilInternal.getAutorunState(player);
     if (ClientProxy.KEY != null && ClientProxy.KEY.isDown()) {
       //wait, are we allowed to?
       if (!isCurrentlyAutorun && player.isFallFlying()) {
@@ -28,12 +27,12 @@ public class AutoSprintEvents {
         }
       }
       // toggle it to inverse
-      AutoSprintUtil.setAutorunState(player, !isCurrentlyAutorun);
+      AutoSprintUtilInternal.setAutorunState(player, !isCurrentlyAutorun);
     }
     else if (isCurrentlyAutorun) {
-      if (AutoSprintUtil.doesKeypressHaltSprint(player)) {
+      if (AutoSprintUtilInternal.doesKeypressHaltSprint(player)) {
         // auto off
-        AutoSprintUtil.setAutorunState(player, false);
+        AutoSprintUtilInternal.setAutorunState(player, false);
       }
     }
   }
@@ -41,7 +40,7 @@ public class AutoSprintEvents {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onTick(PlayerTickEvent.Post event) {
-    if (AutoSprintUtil.getAutorunState(event.getEntity())) {
+    if (AutoSprintUtilInternal.getAutorunState(event.getEntity())) {
       move(event.getEntity());
     }
   }
@@ -50,19 +49,19 @@ public class AutoSprintEvents {
     float speed; // = ConfigAutoRun.SPD_WALKING.get().floatValue();
     if (player.isPassenger() && player.getVehicle() instanceof LivingEntity livin) {
       speed = ConfigAutoRun.SPD_MOUNTED.get().floatValue();
-      AutoSprintUtil.moveAlongVector(livin, AutoSprintUtil.vector(player, speed));
+      AutoSprintUtilInternal.moveAlongVector(livin, AutoSprintUtilInternal.vector(player, speed));
     }
     else if (player.getVehicle() instanceof Boat ridin) {
       speed = ConfigAutoRun.SPD_BOATING.get().floatValue();
-      AutoSprintUtil.moveAlongVector(ridin, AutoSprintUtil.vector(player, speed));
+      AutoSprintUtilInternal.moveAlongVector(ridin, AutoSprintUtilInternal.vector(player, speed));
     }
     else if (player.onGround() == false && player.isCreative()) {
       speed = ConfigAutoRun.SPD_CREATIVE.get().floatValue();
-      AutoSprintUtil.moveAlongVector(player, AutoSprintUtil.vector(player, speed));
+      AutoSprintUtilInternal.moveAlongVector(player, AutoSprintUtilInternal.vector(player, speed));
     }
     else {
       speed = ConfigAutoRun.SPD_WALKING.get().floatValue();
-      AutoSprintUtil.moveAlongVector(player, AutoSprintUtil.vector(player, speed));
+      AutoSprintUtilInternal.moveAlongVector(player, AutoSprintUtilInternal.vector(player, speed));
     }
   }
   //
