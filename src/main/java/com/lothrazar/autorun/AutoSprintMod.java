@@ -17,7 +17,7 @@ public class AutoSprintMod {
 
   public AutoSprintMod(IEventBus bus, ModContainer modContainer) {
 //    new ConfigAutoRun();
-    modContainer.registerConfig(ModConfig.Type.COMMON, ConfigAutoRun.CONFIG);
+    modContainer.registerConfig(ModConfig.Type.CLIENT, ConfigAutoRun.CONFIG);
     // client-side only — do not load event handlers on dedicated server
     if (FMLEnvironment.dist == Dist.CLIENT) {
       NeoForge.EVENT_BUS.register(new AutoSprintEvents());
