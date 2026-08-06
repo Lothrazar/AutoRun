@@ -1,4 +1,6 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 plugins {
     id 'java-library'
@@ -6,7 +8,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
     id 'net.darkhax.curseforgegradle' version '1.1.25'
-    id 'com.modrinth.minotaur' version '2.8.7' apply false
+    id 'com.modrinth.minotaur' version '2.9.0' apply false
 }
 def localProps = new Properties()
 def localFile = file("mod.properties")
@@ -53,9 +55,9 @@ base {
     archivesName = mod_id
 }
 
-// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
+// Mojang ships Java 25 to end users in 26.1.2, so mods should target Java 25.
 // for intellij make sure to set JVM  Navigate to Build, Execution, Deployment > Build Tools > Gradle
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 neoForge {
@@ -70,10 +72,6 @@ neoForge {
     // Other optional settings
     // validateAccessTransformers = true
 
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
     accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -101,7 +99,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
 
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')
@@ -262,7 +260,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
   mainFile.releaseType   = 'release'
   mainFile.addGameVersion(minecraft_version)
   mainFile.addGameVersion('NeoForge')
-  mainFile.addGameVersion('Java 21')
+  mainFile.addGameVersion('Java 25')
   mainFile.addEnvironment('Client', 'Server')
   mainFile.changelog     = changelog
   mainFile.changelogType = 'markdown'
@@ -291,4 +289,46 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+tasks.register('syncExampleConfigs') {
+  group = 'documentation'
+  description = 'Copies generated example config files from run/config/ into examples/.'
+
+  // Resolve everything project-related at configuration time so the task stays
+  // compatible with the configuration cache (Task.project is unavailable at execution time).
+  def modId       = project.mod_id
+  def projectName = project.name
+  def srcDir      = file('run/config')
+  def destDir     = file('examples')
+
+  doLast {
+    if (!srcDir.exists()) {
+      logger.lifecycle("[${projectName}] run/config/ not found — nothing to sync.")
+      return
+    }
+
+    def found = [
+      "${modId}.json",
+      "${modId}.toml",
+      "${modId}-common.toml",
+      "${modId}-client.toml",
+      "${modId}-server.toml"
+    ].collect { new File(srcDir, it) }.findAll { it.exists() }
+
+    if (found.isEmpty()) {
+      logger.lifecycle("[${projectName}] No matching config files in run/config/ for '${modId}'.")
+      return
+    }
+
+    destDir.mkdirs()
+    found.each { src ->
+      Files.copy(
+        src.toPath(),
+        new File(destDir, src.name).toPath(),
+        StandardCopyOption.REPLACE_EXISTING
+      )
+      logger.lifecycle("[${projectName}] Synced: ${src.name} → examples/")
+    }
+  }
 }

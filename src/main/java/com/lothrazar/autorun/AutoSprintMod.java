@@ -19,7 +19,7 @@ public class AutoSprintMod {
 //    new ConfigAutoRun();
     modContainer.registerConfig(ModConfig.Type.CLIENT, ConfigAutoRun.CONFIG);
     // client-side only — do not load event handlers on dedicated server
-    if (FMLEnvironment.dist == Dist.CLIENT) {
+    if (FMLEnvironment.getDist() == Dist.CLIENT) {
       NeoForge.EVENT_BUS.register(new AutoSprintEvents());
     }
     // IExtensionPoint  removed aww

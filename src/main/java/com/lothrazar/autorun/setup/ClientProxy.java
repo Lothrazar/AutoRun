@@ -16,6 +16,6 @@ public class ClientProxy {
   @SubscribeEvent
   public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
     //    net.minecraftforge.client.ClientRegistry.registerKeyBinding(CAKE);
-    event.register(KEY = new KeyMapping("key.run", GLFW.GLFW_KEY_H, "key.categories.movement"));
+    event.register(KEY = new KeyMapping("key.run", GLFW.GLFW_KEY_H, KeyMapping.Category.MOVEMENT));
   }
 }
